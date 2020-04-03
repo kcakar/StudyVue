@@ -32,7 +32,11 @@ export default {
 @import '@/design/index.scss';
 </style>
 ```
-   
-   
+## Propety binding
+   - Binding syntax is as below. Bottom one is the shorthand.  
+```
+<a v-bind:href="kerem">
+<a :href="kerem">
+```
 
 

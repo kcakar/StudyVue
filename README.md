@@ -3,6 +3,11 @@
 ## Terms  
 
 ## Convention  
+   - files in src/assets
+   - components in src/components
+   - design in src/design
+   - views in src/views
+   - name views with dash. **header-bar-brand.vue**
 
 ## What you need
    - install vue cli.
@@ -33,10 +38,34 @@ export default {
 </style>
 ```
 ## Propety binding
-   - Binding syntax is as below. Bottom one is the shorthand.  
-```
-<a v-bind:href="kerem">
-<a :href="kerem">
-```
+   - **v-bind**: Binding syntax is as below. Bottom one is the shorthand.  
+   ```
+   <a v-bind:href="kerem">
+   <a :href="kerem">
+   ```  
+   put the values using **data()** function. **data()** should return an object with the data to bind.
+   ```  
+   <script>
+   export default {
+     name: 'HeaderBarLinks',
+     data() {
+       return {
+         kerem: 'https://github.com/kcakar',
+       };
+     },
+   };
+   </script>
+   ```  
+   - **Interpolation**: Pass the data using data() function on export.
+   ``` 
+   <div>Hey {{ name }}</div>
+   ``` 
 
+## Event Binding
+   - use **v-on:event="method-name"** to bind events. bottom one is the shorthand.
+   ``` 
+      <button v-on:click="ok">OK</button>
+      <button @click="ok">OK</button>
+   ``` 
+   
 

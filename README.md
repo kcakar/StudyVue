@@ -1,7 +1,17 @@
 # Vue  
 
 ## Terms  
-
+   - **Computed Properties**  
+   These fire when any dependency value changes.  
+   They are cached based on their dependencies.  
+   Only reevaluates if reactive depndencies are changed.  
+   ```
+   computed: {
+     fullName() {
+       return `${this.selectedHero.firstName} ${this.selectedHero.lastName}`;
+     },
+   },
+   ```
 ## Convention  
    - files in src/assets
    - components in src/components
@@ -119,4 +129,82 @@ export default {
           <option>Invisibility</option>
         </select>
       ```
+## Conditional content
+   -  **v-for**: foreach loop. **Bind a unique :key for fast rendering**
+   ```
+     <ul class="list is-hoverable">
+       <li v-for="hero in heroes" :key="hero.id" @click="selectHero(hero)" >
+           <a class="list-item"
+               :class="{'is-active':selectedHero==hero}"
+           ><span>{{hero.firstName}} {{hero.lastName}}</span></a> 
+       </li>
+     </ul>
+   ```
+   -  **v-if**: Decides if the element should be rendered or not. If it is false, the element is removed from DOM.
+   ```
+   <div class="columns" v-if="isRender">
+   ```
+   -  **v-show**: The element is always on DOM. But hidden or shown depending on given value.
+   
+## Lifecycle Hooks
+   - beforeCreate
+   - created: fetch data here
+   - beforeMounted
+   - mounted
+   DOM AVAILABLE
+   - beforeUpdate
+   - updated
+   - beforeDestroy
+   - destroyed
+   
+## Watchers  
+   Use watchers to do something when a value on the model changes. They are good for async operations. The code below calls a function whenever a capeCounter value changes.
+   ```
+   watch: {
+     'selectedHero.capeCounter': {
+       immediate: true,
+       handler(newValue, oldValue) {
+         console.log(`Watcher evalauted. old=${oldValue}, new=${newValue}`);
+         this.handleTheCapes(newValue);
+       },
+     },
+   }
+   ```
+  
+## FILTERS
+   - Local filter:  
+   ```
+   <p class="comment">
+      {{ selectedHero.originDate | shortDate }}
+   </p>
+   ```
+   ```
+   filters: {
+    shortDate: function(value) {
+      return format(value, displayDateFormat);
+    },
+  },
+  ```
+  - Global filter:  
+  ```
+  Vue.filter('capitalize', function (value) {
+     if (!value) return '';
+     value = value.toString();
+     return value.charAt(0).toUpperCase() + value.slice(1);
+  })
 
+  new Vue({
+     // ...
+  })
+  ```
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

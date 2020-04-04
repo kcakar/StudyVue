@@ -13,12 +13,33 @@
    },
    ```
    - **Kebab case**: this-is-kebab-case
-   
+   - **Mixins**: These are the common functionality parts of code. Like helpers. They can have methods, computeds, life cycle hooks, data, watches etc. If you have conflict with the component, then the component always have precedence and the rest is merged. Except for watch and hooks. Mixing watch and hooks run before the components run.  
+   **Component**:  
+   ```
+   mixins: [lifecycleHooks, heroWatchers],
+   ```  
+   **Mixin**:
+   ```
+   export const heroWatchers = {
+     // Watchers
+     watch: {
+       selectedHero: {
+         immediate: true,
+         deep: true,
+         handler(newValue, oldValue) {
+           logger.info('old values', oldValue);
+         },
+       },
+     },
+   };
+   ```
 ## Convention  
    - files in src/assets
+   - any component that you route to is in src/views
    - components in src/components
    - design in src/design
    - views in src/views
+   - mixins in src/shared
    - name views with dash. **header-bar-brand.vue**
    - name variables with camelCase. If you pass props to a child, use kebab-case in the child.
 
@@ -221,7 +242,7 @@ export default {
      - Props can have types.
      - Props can be marked as required.
      - Props can have custom validator.  
-     - **ALWAYS** clone the props at the child if you are going to modify them. Then raise an event when you would want to save.
+     - **ALWAYS** clone the props at the child if you are going to modify them. Then raise an event when you would want to save.  
    **Parent**:  
    ```
    <HeroDetail v-if="selectedHero" :hero="selectedHero" />
@@ -280,7 +301,63 @@ export default {
      }
    },
    ```
-  
+## Axios
+   - has GET,POST,PUT,DELETE methods.
+   - returns a promise
+   - try to use async/await syntax
+   
+## Vue Router  
+   vue add router  
+   - add router element to the app.vue
+   ```
+   <router-view></router-view>
+   ```
+   - add router links to redirect. This link automatically adds "router-link-exact-active router-link-active" classes so it is possible to style them with these classes.
+   ```
+   <router-link to="/about"></router-link>
+   <router-link 
+      :to="{ name: 'hero-detail', params: { id: hero.id }}"
+      tag="button"
+      class="link"
+   ></router-link>
+   ```
+   - router.js
+   ```
+   import Vue from 'vue';
+   import Router from 'vue-router';
+   import Heroes from './views/heroes.vue';
+
+   Vue.use(Router);
+   
+   const parseProps = r => ({ id: parseInt(r.params.id) })
+
+   export default new Router({
+     mode: 'history',
+     base: process.env.BASE_URL,
+     routes: [
+       {
+         path: '/',
+         redirect: '/heroes',
+       },
+       {
+         path: '/heroes',
+         name: 'heroes',
+         component: Heroes,
+       },
+       {
+         path: '/villains',
+         name: 'villains',
+         component: Heroes,
+       },
+       {
+         path: '/heroes/:id',
+         name: 'hero-detail',
+         component: HeroDetail,
+         props: parseProps,
+       },
+     ],
+   });
+   ```
   
   
   

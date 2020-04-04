@@ -308,6 +308,28 @@ export default {
    
 ## Vue Router  
    vue add router  
+   - You can lazy load components. **everything that is not required on initial render** should be lazy loaded. **You should always use v-if** instead of v-show for lazy loaded components. **ALSO PASS THE COMPONENT AS A FUNCTION**. You should also bundle similar things together to save traffic.
+   ```
+   <template>
+     <div>
+       <button @click="isModalVisible = true">Open modal</button>
+       <modal-window v-if="isModalVisible" />
+     </div>
+   </template>
+
+   <script>
+   export default {
+     data () {
+       return {
+         isModalVisible: false
+       }
+     },
+     components: {
+       ModalWindow: () => import(/* webpackPrefetch: true */ './ModalWindow.vue')
+     }
+   }
+   </script>
+   ```
    - add router element to the app.vue
    ```
    <router-view></router-view>
@@ -355,10 +377,30 @@ export default {
          component: HeroDetail,
          props: parseProps,
        },
+       //LAZY LOADING VERSION OF THE ABOVE
+       {
+         path: '/heroes/:id',
+         name: 'hero-detail',
+         // props: true,
+         props: parseProps,
+         component: () =>
+           import(/* webpackChunkName: "bundle.heroes" */ './views/hero-detail.vue'),
+       }
      ],
    });
    ```
-  
+   - programmatical routing
+   ```
+   methods: {
+    cancelHero() {
+      this.$router.push({ name: 'heroes' });
+    },
+    async saveHero() {
+      await dataService.updateHero(this.hero);
+      this.$router.push({ name: 'heroes' });
+    },
+  }
+  ```
   
   
   

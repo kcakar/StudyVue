@@ -12,12 +12,15 @@
      },
    },
    ```
+   - **Kebab case**: this-is-kebab-case
+   
 ## Convention  
    - files in src/assets
    - components in src/components
    - design in src/design
    - views in src/views
    - name views with dash. **header-bar-brand.vue**
+   - name variables with camelCase. If you pass props to a child, use kebab-case in the child.
 
 ## What you need
    - install vue cli.
@@ -197,11 +200,86 @@ export default {
      // ...
   })
   ```
-  
-  
-  
-  
-  
+## Component registration
+   - Global registration
+   ```
+   Vue.component('my-component', MyComponent);
+   ```
+   - Local registration  
+   ```
+   import MyComponent from './MyComponent.vue';
+
+   export default {
+     name: 'AnotherComponent',
+     components: {
+       MyComponent,
+     }
+   };
+   ```
+## Passing variables across components  
+   - **Props**:
+     - Props can have types.
+     - Props can be marked as required.
+     - Props can have custom validator.  
+     - **ALWAYS** clone the props at the child if you are going to modify them. Then raise an event when you would want to save.
+   **Parent**:  
+   ```
+   <HeroDetail v-if="selectedHero" :hero="selectedHero" />
+   ```  
+   **Child**:  
+   ```
+   <header class="card-header">
+     <p class="card-header-title">{{ detailedHero.firstName }}</p>
+   </header>
+      
+   <script>
+   export default {
+     name: 'HeroDetail',
+     data: (){
+       detailedHero: {...this.hero},
+     },
+     props: {
+       hero: {
+         type: Object,
+         default: () => {},
+       },
+     },
+   };
+   </script>
+   ```
+   - **Events**  
+   **Child**:  
+   ```
+   methods: {
+    cancelHero() {
+      this.$emit('cancel');
+    },
+    saveHero() {
+      this.$emit('save', this.clonedHero);
+    },
+   }
+   ```  
+   **Parent**:  
+   ```
+   <HeroDetail
+      :hero="selectedHero"
+      @save="saveHero"
+      @cancel="cancelHero"
+      v-if="selectedHero"
+   />
+   
+   methods: 
+     cancelHero() {
+       this.selectedHero = undefined;
+     },
+     saveHero(hero) {
+       const index = this.heroes.findIndex(h => h.id === hero.id);
+       this.heroes.splice(index, 1, hero);
+       this.heroes = [...this.heroes];
+       this.selectedHero = undefined;
+     }
+   },
+   ```
   
   
   

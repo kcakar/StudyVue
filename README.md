@@ -401,7 +401,9 @@ export default {
     },
   }
   ```
-  
+## Vuex
+   - vue add vuex  
+   
   
   
   

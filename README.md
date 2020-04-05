@@ -305,6 +305,7 @@ export default {
    - has GET,POST,PUT,DELETE methods.
    - returns a promise
    - try to use async/await syntax
+   - use interceptors to add JWT tokens
    
 ## Vue Router  
    vue add router  
